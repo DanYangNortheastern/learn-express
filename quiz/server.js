@@ -31,10 +31,19 @@ app.use(
 app.use('/read/usernames', addMsgToRequest);
 
 app.get('/read/usernames', (req, res) => {
-  let usernames = req.users.map(function(user) {
-    return {id: user.id, username: user.username};
+  let name = req.params.name;
+  let users_with_name = req.users.filter(function(user){
+    return user.username === name;
   });
-  res.send(usernames);
+  console.log(users_with_name);
+  if(users_with_name.length === 0){
+    res.send({
+      error: {message: `${name} not found`, status:404}
+    });
+  }
+  else{
+    res.send(users_with_name);
+  }
 });
 
 app.use(express.json());
